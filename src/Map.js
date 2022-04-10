@@ -1,39 +1,22 @@
-import Block from "./Class/Block.js"
-
 export default class Map {
-    constructor(children, dimension, columns, lines, bombMap) {
-        this.columns = columns
-        this.lines = lines
+    constructor(dimension, map) {
         this.dimension = dimension
-        this.map = this.generatedBlock(children, this.columns, this.lines, bombMap)
+        this.map = map
     }
 
     draw(canvas, ctx) {
-        ctx.fillStyle = "#c2c2c2"
-        ctx.fillRect(canvas.clientWidth, canvas.clientHeight, this.dimension.width, this.dimension.height)
-        this.drawBlock(ctx, canvas)
-    }
+        ctx.fillStyle = "#000"
+        ctx.fillRect(0, 0, this.dimension.width, this.dimension.height)
 
-    drawBlock(ctx, canvas) {
-        for (let i = 0; i < this.map.length; i++) {
-            for (let j = 0; j < this.map[i].length; j++) {
-                this.map[i][j].draw(ctx, canvas)
-            }
-        }
+        this.map.forEach((l, i) => {
+            l.forEach((c, j) => {
+                this.map[i][j].draw(ctx)
+            })
+        })
     }
 }
 
-Map.prototype.generatedBlock = (children, columns, lines, bombMap) => {
-    const map = []
-    for (let i = 0; i < children.length; i++) {
-        map.push([])
-        for (let j = 0; j < children[i].length; j++) {
-            let position = children[i][j].position,
-                dimension = children[i][j].dimension,
-                bomb = children[i][j].bomb
-
-            map[i].push(new Block(position, dimension, bomb, columns, lines, bombMap))
-        }
-    }
-    return map
-}
+// for (let i = 0; i < this.map.length; i++) {
+//     for (let j = 0; j < this.map[i].length; j++) {
+//     }
+// }

@@ -1,9 +1,10 @@
 import Map from "./src/Map.js"
+import Block from "./src/Class/Block.js"
 
 const canvas = document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
 
-const COLUMNS = 15
+const COLUMNS = 20
 const LINES = 10
 const DIMENSION = 20
 const BOMBS_MAX = Math.round((COLUMNS * LINES) / 5)
@@ -29,7 +30,6 @@ function setup() {
 }
 
 function initial() {
-    const childrens = []
     const bombs = []
 
     for (let i = 0; i < LINES; i++) {
@@ -47,35 +47,104 @@ function initial() {
         bombs[x][y] = true
     }
 
+    const mapBlocks = []
     for (let i = 0; i < LINES; i++) {
-        childrens.push([])
+        mapBlocks.push([])
         for (let j = 0; j < COLUMNS; j++) {
-            let position = { x: i, y: j },
-                dimension = DIMENSION,
-                bomb = bombs[i][j]
+            let position = { x: i, y: j }
+            let dimension = DIMENSION
+            let bomb = bombs[i][j]
+            let number = 0
 
-            childrens[i].push({ position, dimension, bomb })
+            if (i > 0 && i < LINES - 1) {
+                if (j > 0 && j < COLUMNS - 1) {
+                    if (bombs[i - 1][j]) { number++ }
+                    if (bombs[i - 1][j + 1]) { number++ }
+                    if (bombs[i][j + 1]) { number++ }
+                    if (bombs[i + 1][j + 1]) { number++ }
+                    if (bombs[i + 1][j]) { number++ }
+                    if (bombs[i + 1][j - 1]) { number++ }
+                    if (bombs[i][j - 1]) { number++ }
+                    if (bombs[i - 1][j - 1]) { number++ }
+                } else {
+                    if (j == 0) {
+                        if (bombs[i - 1][j]) { number++ }
+                        if (bombs[i - 1][j + 1]) { number++ }
+                        if (bombs[i][j + 1]) { number++ }
+                        if (bombs[i + 1][j + 1]) { number++ }
+                        if (bombs[i + 1][j]) { number++ }
+                    } else {
+                        if (bombs[i - 1][j]) { number++ }
+                        if (bombs[i + 1][j]) { number++ }
+                        if (bombs[i + 1][j - 1]) { number++ }
+                        if (bombs[i][j - 1]) { number++ }
+                        if (bombs[i - 1][j - 1]) { number++ }
+                    }
+                }
+            } else {
+                if (i == 0) {
+                    if (j > 0 && j < COLUMNS - 1) {
+                        if (bombs[i][j + 1]) { number++ }
+                        if (bombs[i + 1][j + 1]) { number++ }
+                        if (bombs[i + 1][j]) { number++ }
+                        if (bombs[i + 1][j - 1]) { number++ }
+                        if (bombs[i][j - 1]) { number++ }
+                    } else {
+                        if (j == 0) {
+                            if (bombs[i][j + 1]) { number++ }
+                            if (bombs[i + 1][j + 1]) { number++ }
+                            if (bombs[i + 1][j]) { number++ }
+                        } else {
+                            if (bombs[i + 1][j]) { number++ }
+                            if (bombs[i + 1][j - 1]) { number++ }
+                            if (bombs[i][j - 1]) { number++ }
+                        }
+                    }
+                } else {
+                    if (j > 0 && j < COLUMNS - 1) {
+                        if (bombs[i - 1][j]) { number++ }
+                        if (bombs[i - 1][j + 1]) { number++ }
+                        if (bombs[i][j + 1]) { number++ }
+                        if (bombs[i][j - 1]) { number++ }
+                        if (bombs[i - 1][j - 1]) { number++ }
+                    } else {
+                        if (j == 0) {
+                            if (bombs[i - 1][j]) { number++ }
+                            if (bombs[i - 1][j + 1]) { number++ }
+                        } else {
+                            if (bombs[i - 1][j]) { number++ }
+                            if (bombs[i][j - 1]) { number++ }
+                            if (bombs[i - 1][j - 1]) { number++ }
+                        }
+                    }
+                }
+            }
+
+            mapBlocks[i].push(new Block(position, dimension, bomb, number))
         }
     }
 
+    map = new Map({ width: CANVAS_DIMENSION.width(), height: CANVAS_DIMENSION.height() }, mapBlocks)
 
-    map = new Map(childrens, { width: CANVAS_DIMENSION.width(), height: CANVAS_DIMENSION.height() }, COLUMNS, LINES, bombs)
-
+    map.map.forEach((l, i) => {
+        let lines = ""
+        l.forEach((c, j) => {
+            if (map.map[i][j].bomb) {
+                lines += "*  "
+            } else {
+                lines += map.map[i][j].number + "  "
+            }
+        })
+        console.log(lines);
+    })
 
     map.draw(canvas, ctx)
-    map.map.forEach((blocks, i) => {
-        ctx.fillStyle = "#000"
-        ctx.fillRect(canvas.clientWidth, canvas.clientHeight, blocks[i].dimension, blocks[i].dimension)
-        ctx.fillStyle = "#c2c2c2"
-        ctx.fillRect(canvas.clientWidth + 1, canvas.clientHeight + 1, blocks[i].dimension - 1, blocks[i].dimension - 1)
-    })
-    animate()
+
+    // animate()
 }
 
 function animate() {
-    map.map.forEach((blocks, i) => {
 
-    })
     animateFrame = requestAnimationFrame(animate)
 }
 
