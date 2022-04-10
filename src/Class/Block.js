@@ -37,10 +37,10 @@ Block.prototype.contBomb = (position, columns, lines, bomb, bombMap) => {
                 if (bombMap[position.x + 1][position.y]) { number++ }
             } else {
                 if (bombMap[position.x - 1][position.y]) { number++ }
-                if (bombMap[position.x + 1][position.y]) { number++ }
-                if (bombMap[position.x + 1][position.y - 1]) { number++ }
-                if (bombMap[position.x][position.y - 1]) { number++ }
                 if (bombMap[position.x - 1][position.y - 1]) { number++ }
+                if (bombMap[position.x][position.y - 1]) { number++ }
+                if (bombMap[position.x + 1][position.y - 1]) { number++ }
+                if (bombMap[position.x + 1][position.y]) { number++ }
             }
         }
     } else {
@@ -57,9 +57,9 @@ Block.prototype.contBomb = (position, columns, lines, bomb, bombMap) => {
                     if (bombMap[position.x + 1][position.y + 1]) { number++ }
                     if (bombMap[position.x + 1][position.y]) { number++ }
                 } else {
-                    if (bombMap[position.x][position.y + 1]) { number++ }
                     if (bombMap[position.x + 1][position.y]) { number++ }
                     if (bombMap[position.x + 1][position.y - 1]) { number++ }
+                    if (bombMap[position.x][position.y - 1]) { number++ }
                 }
             }
         } else {
@@ -76,8 +76,8 @@ Block.prototype.contBomb = (position, columns, lines, bomb, bombMap) => {
                     if (bombMap[position.x][position.y + 1]) { number++ }
                 } else {
                     if (bombMap[position.x - 1][position.y]) { number++ }
-                    if (bombMap[position.x][position.y - 1]) { number++ }
                     if (bombMap[position.x - 1][position.y - 1]) { number++ }
+                    if (bombMap[position.x][position.y - 1]) { number++ }
                 }
             }
         }
