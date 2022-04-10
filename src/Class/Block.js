@@ -19,7 +19,7 @@ Block.prototype.contBomb = (position, columns, lines, bomb, bombMap) => {
     let number = 0
 
     if (lines > position.x > 0) {
-        if (columns < position.y > 0) {
+        if (columns > position.y > 0) {
             if (bombMap[position.x - 1][position.y]) { number++ }
             if (bombMap[position.x - 1][position.y + 1]) { number++ }
             if (bombMap[position.x][position.y + 1]) { number++ }
@@ -45,7 +45,7 @@ Block.prototype.contBomb = (position, columns, lines, bomb, bombMap) => {
         }
     } else {
         if (position.x == 0) {
-            if (columns < position.y > 0) {
+            if (columns > position.y > 0) {
                 if (bombMap[position.x][position.y + 1]) { number++ }
                 if (bombMap[position.x + 1][position.y + 1]) { number++ }
                 if (bombMap[position.x + 1][position.y]) { number++ }
