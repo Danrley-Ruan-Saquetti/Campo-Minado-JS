@@ -4,6 +4,7 @@ export default class Block {
         this.dimension = dimension
         this.bomb = bomb
         this.number = number
+        this.marked = false
         this.reveled = false
     }
 
@@ -12,12 +13,17 @@ export default class Block {
             ctx.font = "15px monospace"
             ctx.fillStyle = "#000"
             ctx.fillText(this.number, this.position.y * this.dimension + 5, this.position.x * this.dimension + 15)
-            if (this.bomb) {} else {
+            if (this.bomb) {
+
+            } else {
 
             }
         } else {
             ctx.fillStyle = "#c2c2c2"
             ctx.fillRect(this.position.y * this.dimension + .01, this.position.x * this.dimension + .01, this.dimension - 1, this.dimension - 1)
+            if (this.marked) {
+
+            }
         }
     }
 }

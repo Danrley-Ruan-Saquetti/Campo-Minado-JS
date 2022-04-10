@@ -9,8 +9,6 @@ const LINES = 10
 const DIMENSION = 20
 const BOMBS_MAX = Math.round((COLUMNS * LINES) / 5)
 
-let map
-
 const CANVAS_DIMENSION = {
     width: () => {
         return DIMENSION * COLUMNS
@@ -23,10 +21,13 @@ const CANVAS_DIMENSION = {
 canvas.width = CANVAS_DIMENSION.width()
 canvas.height = CANVAS_DIMENSION.height()
 
+let map
 let animateFrame
 
 function setup() {
     initial()
+    window.addEventListener("click", (ev) => map.click(ev.clientX, ev.clientY, 0))
+    window.addEventListener("contextmenu", (ev) => map.click(ev.clientX, ev.clientY, 1))
 }
 
 function initial() {
@@ -126,24 +127,23 @@ function initial() {
 
     map = new Map({ width: CANVAS_DIMENSION.width(), height: CANVAS_DIMENSION.height() }, mapBlocks)
 
-    map.map.forEach((l, i) => {
-        let lines = ""
-        l.forEach((c, j) => {
-            if (map.map[i][j].bomb) {
-                lines += "*  "
-            } else {
-                lines += map.map[i][j].number + "  "
-            }
-        })
-        console.log(lines);
-    })
+    // map.map.forEach((l, i) => {
+    //     let lines = ""
+    //     l.forEach((c, j) => {
+    //         if (map.map[i][j].bomb) {
+    //             lines += "*  "
+    //         } else {
+    //             lines += map.map[i][j].number + "  "
+    //         }
+    //     })
+    //     console.log(lines);
+    // })
 
-    map.draw(canvas, ctx)
-
-    // animate()
+    animate()
 }
 
 function animate() {
+    map.draw(canvas, ctx)
 
     animateFrame = requestAnimationFrame(animate)
 }
