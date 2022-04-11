@@ -126,24 +126,24 @@ function initial() {
 
     map = new Map({ width: CANVAS_DIMENSION.width(), height: CANVAS_DIMENSION.height() }, mapBlocks)
 
-    map.map.forEach((l, i) => {
-        let lines = ""
-        l.forEach((c, j) => {
-            if (map.map[i][j].bomb) {
-                lines += "*  "
-            } else {
-                lines += map.map[i][j].number + "  "
-            }
-        })
-        console.log(lines);
-    })
+    // map.map.forEach((l, i) => {
+    //     let lines = ""
+    //     l.forEach((c, j) => {
+    //         if (map.map[i][j].bomb) {
+    //             lines += "*  "
+    //         } else {
+    //             lines += map.map[i][j].number + "  "
+    //         }
+    //     })
+    //     console.log(lines);
+    // })
 
-    map.draw(canvas, ctx)
 
-    // animate()
+    animate()
 }
 
 function animate() {
+    map.draw(canvas, ctx)
 
     animateFrame = requestAnimationFrame(animate)
 }
