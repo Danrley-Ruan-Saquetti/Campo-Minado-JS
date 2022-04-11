@@ -58,25 +58,21 @@ function initial() {
             let number = 0
 
             if (i > 0 && i < LINES - 1) {
+                if (bombs[i - 1][j]) { number++ }
+                if (bombs[i + 1][j]) { number++ }
                 if (j > 0 && j < COLUMNS - 1) {
-                    if (bombs[i - 1][j]) { number++ }
                     if (bombs[i - 1][j + 1]) { number++ }
                     if (bombs[i][j + 1]) { number++ }
                     if (bombs[i + 1][j + 1]) { number++ }
-                    if (bombs[i + 1][j]) { number++ }
                     if (bombs[i + 1][j - 1]) { number++ }
                     if (bombs[i][j - 1]) { number++ }
                     if (bombs[i - 1][j - 1]) { number++ }
                 } else {
                     if (j == 0) {
-                        if (bombs[i - 1][j]) { number++ }
                         if (bombs[i - 1][j + 1]) { number++ }
                         if (bombs[i][j + 1]) { number++ }
                         if (bombs[i + 1][j + 1]) { number++ }
-                        if (bombs[i + 1][j]) { number++ }
                     } else {
-                        if (bombs[i - 1][j]) { number++ }
-                        if (bombs[i + 1][j]) { number++ }
                         if (bombs[i + 1][j - 1]) { number++ }
                         if (bombs[i][j - 1]) { number++ }
                         if (bombs[i - 1][j - 1]) { number++ }
@@ -84,36 +80,32 @@ function initial() {
                 }
             } else {
                 if (i == 0) {
+                    if (bombs[i + 1][j]) { number++ }
                     if (j > 0 && j < COLUMNS - 1) {
                         if (bombs[i][j + 1]) { number++ }
                         if (bombs[i + 1][j + 1]) { number++ }
-                        if (bombs[i + 1][j]) { number++ }
                         if (bombs[i + 1][j - 1]) { number++ }
                         if (bombs[i][j - 1]) { number++ }
                     } else {
                         if (j == 0) {
                             if (bombs[i][j + 1]) { number++ }
                             if (bombs[i + 1][j + 1]) { number++ }
-                            if (bombs[i + 1][j]) { number++ }
                         } else {
-                            if (bombs[i + 1][j]) { number++ }
                             if (bombs[i + 1][j - 1]) { number++ }
                             if (bombs[i][j - 1]) { number++ }
                         }
                     }
                 } else {
+                    if (bombs[i - 1][j]) { number++ }
                     if (j > 0 && j < COLUMNS - 1) {
-                        if (bombs[i - 1][j]) { number++ }
                         if (bombs[i - 1][j + 1]) { number++ }
                         if (bombs[i][j + 1]) { number++ }
                         if (bombs[i][j - 1]) { number++ }
                         if (bombs[i - 1][j - 1]) { number++ }
                     } else {
                         if (j == 0) {
-                            if (bombs[i - 1][j]) { number++ }
                             if (bombs[i - 1][j + 1]) { number++ }
                         } else {
-                            if (bombs[i - 1][j]) { number++ }
                             if (bombs[i][j - 1]) { number++ }
                             if (bombs[i - 1][j - 1]) { number++ }
                         }
@@ -126,18 +118,6 @@ function initial() {
     }
 
     map = new Map({ width: CANVAS_DIMENSION.width(), height: CANVAS_DIMENSION.height() }, mapBlocks)
-
-    // map.map.forEach((l, i) => {
-    //     let lines = ""
-    //     l.forEach((c, j) => {
-    //         if (map.map[i][j].bomb) {
-    //             lines += "*  "
-    //         } else {
-    //             lines += map.map[i][j].number + "  "
-    //         }
-    //     })
-    //     console.log(lines);
-    // })
 
     animate()
 }

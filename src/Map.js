@@ -44,6 +44,8 @@ export default class Map {
     }
 
     dig(blockClicked) {
-        blockClicked.reveled = true
+        if (!blockClicked.marked) {
+            blockClicked.reveled = true
+        }
     }
 }
