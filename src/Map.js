@@ -27,12 +27,8 @@ export default class Map {
                 const minY = i * block.dimension
                 const maxY = (i * block.dimension) + block.dimension
 
-                if (x >= minX && x <= maxX && x >= minY && x <= maxY) {
+                if (x >= minX && x <= maxX && y >= minY && y <= maxY) {
                     blockClicked = block
-                    console.log(minX, minY);
-                    console.log(x, y);
-                    console.log(maxX, maxY);
-                    console.log("");
                     break
                 }
             }

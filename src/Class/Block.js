@@ -32,6 +32,4 @@ export default class Block {
             ctx.fillRect(this.position.y * this.dimension + 2, this.position.x * this.dimension + 2, this.dimension - 5, this.dimension - 5)
         }
     }
-
-
 }
