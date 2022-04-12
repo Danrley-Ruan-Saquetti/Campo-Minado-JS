@@ -2,6 +2,7 @@ export default class Map {
     constructor(dimension, map) {
         this.dimension = dimension
         this.map = map
+        this.runningGame = true
     }
 
     draw(canvas, ctx) {
@@ -11,6 +12,17 @@ export default class Map {
         this.map.forEach((l, i) => {
             l.forEach((c, j) => {
                 this.map[i][j].draw(ctx)
+            })
+        })
+    }
+
+    drawEnd(canvas, ctx) {
+        ctx.fillStyle = "#000"
+        ctx.fillRect(0, 0, this.dimension.width, this.dimension.height)
+
+        this.map.forEach((l, i) => {
+            l.forEach((c, j) => {
+                this.map[i][j].drawEnd(ctx)
             })
         })
     }
@@ -45,7 +57,169 @@ export default class Map {
 
     dig(blockClicked) {
         if (!blockClicked.marked) {
-            blockClicked.reveled = true
+            if (!blockClicked.bomb) {
+                blockClicked.reveled = true
+                this.openMap(blockClicked.position.x, blockClicked.position.y)
+            } else {
+                this.runningGame = false
+            }
+        }
+    }
+
+    openMap(i, j) {
+        let map = this.map
+
+        console.log(map[i][j]);
+        if (map[i][j].number == 0) {
+            if (i > 0 && i < map.length - 1) {
+                if (!map[i - 1][j].reveled && !map[i - 1][j].bomb) {
+                    map[i - 1][j].reveled = true
+                    this.openMap(i - 1, j)
+                }
+                if (!map[i + 1][j].reveled && !map[i + 1][j].bomb) {
+                    map[i + 1][j].reveled = true
+                    this.openMap(i + 1, j)
+                }
+                if (j > 0 && j < map[0].length - 1) {
+                    if (!map[i - 1][j + 1].reveled && !map[i - 1][j + 1].bomb) {
+                        map[i - 1][j + 1].reveled = true
+                        this.openMap(i - 1, j + 1)
+                    }
+                    if (!map[i][j + 1].reveled && !map[i][j + 1].bomb) {
+                        map[i][j + 1].reveled = true
+                        this.openMap(i, j + 1)
+                    }
+                    if (!map[i + 1][j + 1].reveled && !map[i + 1][j + 1].bomb) {
+                        map[i + 1][j + 1].reveled = true
+                        this.openMap(i + 1, j + 1)
+                    }
+                    if (!map[i + 1][j - 1].reveled && !map[i + 1][j - 1].bomb) {
+                        map[i + 1][j - 1].reveled = true
+                        this.openMap(i + 1, j - 1)
+                    }
+                    if (!map[i][j - 1].reveled && !map[i][j - 1].bomb) {
+                        map[i][j - 1].reveled = true
+                        this.openMap(i, j - 1)
+                    }
+                    if (!map[i - 1][j - 1].reveled && !map[i - 1][j - 1].bomb) {
+                        map[i - 1][j - 1].reveled = true
+                        this.openMap(i - 1, j - 1)
+                    }
+                } else {
+                    if (j == 0) {
+                        if (!map[i - 1][j + 1].reveled && !map[i - 1][j + 1].bomb) {
+                            map[i - 1][j + 1].reveled = true
+                            this.openMap(i - 1, j + 1)
+                        }
+                        if (!map[i][j + 1].reveled && !map[i][j + 1].bomb) {
+                            map[i][j + 1].reveled = true
+                            this.openMap(i, j + 1)
+                        }
+                        if (!map[i + 1][j + 1].reveled && !map[i + 1][j + 1].bomb) {
+                            map[i + 1][j + 1].reveled = true
+                            this.openMap(i + 1, j + 1)
+                        }
+                    } else {
+                        if (!map[i + 1][j - 1].reveled && !map[i + 1][j - 1].bomb) {
+                            map[i + 1][j - 1].reveled = true
+                            this.openMap(i + 1, j - 1)
+                        }
+                        if (!map[i][j - 1].reveled && !map[i][j - 1].bomb) {
+                            map[i][j - 1].reveled = true
+                            this.openMap(i, j - 1)
+                        }
+                        if (!map[i - 1][j - 1].reveled && !map[i - 1][j - 1].bomb) {
+                            map[i - 1][j - 1].reveled = true
+                            this.openMap(i - 1, j - 1)
+                        }
+                    }
+                }
+            } else {
+                if (i == 0) {
+                    if (!map[i + 1][j].reveled && !map[i + 1][j].bomb) {
+                        map[i + 1][j].reveled = true
+                        this.openMap(i + 1, j)
+                    }
+                    if (j > 0 && j < map[0].length - 1) {
+                        if (!map[i][j + 1].reveled && !map[i][j + 1].bomb) {
+                            map[i][j + 1].reveled = true
+                            this.openMap(i, j + 1)
+                        }
+                        if (!map[i + 1][j + 1].reveled && !map[i + 1][j + 1].bomb) {
+                            map[i + 1][j + 1].reveled = true
+                            this.openMap(i + 1, j + 1)
+                        }
+                        if (!map[i + 1][j - 1].reveled && !map[i + 1][j - 1].bomb) {
+                            map[i + 1][j - 1].reveled = true
+                            this.openMap(i + 1, j - 1)
+                        }
+                        if (!map[i][j - 1].reveled && !map[i][j - 1].bomb) {
+                            map[i][j - 1].reveled = true
+                            this.openMap(i, j - 1)
+                        }
+                    } else {
+                        if (j == 0) {
+                            if (!map[i][j + 1].reveled && !map[i][j + 1].bomb) {
+                                map[i][j + 1].reveled = true
+                                this.openMap(i, j + 1)
+                            }
+                            if (!map[i + 1][j + 1].reveled && !map[i + 1][j + 1].bomb) {
+                                map[i + 1][j + 1].reveled = true
+                                this.openMap(i + 1, j + 1)
+                            }
+                        } else {
+                            if (!map[i + 1][j - 1].reveled && !map[i + 1][j - 1].bomb) {
+                                map[i + 1][j - 1].reveled = true
+                                this.openMap(i + 1, j - 1)
+                            }
+                            if (!map[i][j - 1].reveled && !map[i][j - 1].bomb) {
+                                map[i][j - 1].reveled = true
+                                this.openMap(i, j - 1)
+                            }
+                        }
+                    }
+                } else {
+                    if (!map[i - 1][j].reveled && !map[i - 1][j].bomb) {
+                        map[i - 1][j].reveled = true
+                        this.openMap(i - 1, j)
+                    }
+                    if (j > 0 && j < map[0].length - 1) {
+                        if (!map[i - 1][j + 1].reveled && !map[i - 1][j + 1].bomb) {
+                            map[i - 1][j + 1].reveled = true
+                            this.openMap(i - 1, j + 1)
+                        }
+                        if (!map[i][j + 1].reveled && !map[i][j + 1].bomb) {
+                            map[i][j + 1].reveled = true
+                            this.openMap(i, j + 1)
+                        }
+                        if (!map[i][j - 1].reveled && !map[i][j - 1].bomb) {
+                            map[i][j - 1].reveled = true
+                            this.openMap(i, j - 1)
+                        }
+
+                        if (!map[i - 1][j - 1].reveled && !map[i - 1][j - 1].bomb) {
+                            map[i - 1][j - 1].reveled = true
+                            this.openMap(i - 1, j - 1)
+                        }
+                    } else {
+                        if (j == 0) {
+                            if (!map[i - 1][j + 1].reveled && !map[i - 1][j + 1].bomb) {
+                                map[i - 1][j + 1].reveled = true
+                                this.openMap(i - 1, j + 1)
+                            }
+                        } else {
+                            if (!map[i][j - 1].reveled && !map[i][j - 1].bomb) {
+                                map[i][j - 1].reveled = true
+                                this.openMap(i, j - 1)
+                            }
+                            if (!map[i - 1][j - 1].reveled && !map[i - 1][j - 1].bomb) {
+                                map[i - 1][j - 1].reveled = true
+                                this.openMap(i - 1, j - 1)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

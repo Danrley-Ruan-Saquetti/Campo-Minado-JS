@@ -6,8 +6,8 @@ const ctx = canvas.getContext("2d")
 
 const COLUMNS = 20
 const LINES = 10
-const DIMENSION = 20
-const BOMBS_MAX = Math.round((COLUMNS * LINES) / 5)
+const DIMENSION = 30
+const BOMBS_MAX = Math.round((COLUMNS * LINES) / 8)
 
 const CANVAS_DIMENSION = {
     width: () => {
@@ -125,7 +125,16 @@ function initial() {
 function animate() {
     map.draw(canvas, ctx)
 
-    animateFrame = requestAnimationFrame(animate)
+    if (!map.runningGame) {
+        cancelAnimationFrame(animateFrame)
+        endGame()
+    } else { animateFrame = requestAnimationFrame(animate) }
+}
+
+function endGame() {
+    map.drawEnd(canvas, ctx)
+
+    setTimeout(initial, 5000)
 }
 
 window.onload = setup
