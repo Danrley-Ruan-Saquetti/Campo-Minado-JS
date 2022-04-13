@@ -1,13 +1,16 @@
 import Map from "./src/Map.js"
 import Block from "./src/Class/Block.js"
 
-const canvas = document.getElementById("canvas")
-const ctx = canvas.getContext("2d")
-
+let map
+let animateFrame
 let COLUMNS = 0
 let LINES = 0
 const DIMENSION = 30
 let BOMBS_MAX
+let clickInitial
+
+const canvas = document.getElementById("canvas")
+const ctx = canvas.getContext("2d")
 
 const WINDOW_DIMENSION = {
     height: () => { return window.innerHeight },
@@ -28,18 +31,20 @@ canvas.height = CANVAS_DIMENSION.height()
 
 resizeCanvas()
 
-let map
-let animateFrame
-
 function setup() {
     checkWindowSize_Canvas()
 
     canvas.addEventListener("click", (ev) => {
-        map.click((ev.clientX) - canvas.offsetLeft, (ev.clientY) - canvas.offsetTop, 0)
+        let blockClicked = map.getBlock((ev.clientX) - canvas.offsetLeft, (ev.clientY) - canvas.offsetTop)
+        if (clickInitial) {
+            openInitial(blockClicked.position.x, blockClicked.position.y)
+            clickInitial = false
+        }
+        map.click(blockClicked.position.x, blockClicked.position.y, 0)
     })
     canvas.addEventListener("contextmenu", (ev) => {
         ev.preventDefault()
-        map.click((ev.clientX) - canvas.offsetLeft, (ev.clientY) - canvas.offsetTop, 1)
+        map.click(blockClicked.position.x, blockClicked.position.y, 1)
     })
     document.getElementById("start").addEventListener("click", () => {
         const difficulty = Number(document.getElementById("difficulty").value)
@@ -81,9 +86,10 @@ function scoreOn() {
 }
 
 function initial(columns, lines) {
+    clickInitial = true
     COLUMNS = columns
     LINES = lines
-    BOMBS_MAX = Math.round((COLUMNS * LINES) / 10)
+    BOMBS_MAX = Math.round((COLUMNS * LINES) / 8)
 
     canvas.width = CANVAS_DIMENSION.width()
     canvas.height = CANVAS_DIMENSION.height()
@@ -97,16 +103,6 @@ function initial(columns, lines) {
         for (let j = 0; j < COLUMNS; j++) bombs[i].push(false)
     }
 
-    for (let i = 0; i < BOMBS_MAX; i++) {
-        let x, y
-        do {
-            x = Math.round(Math.random() * bombs.length)
-            y = Math.round(Math.random() * bombs[0].length)
-        } while (x < 0 || x >= bombs.length || y < 0 || y >= bombs[x].length || bombs[x][y]);
-
-        bombs[x][y] = true
-    }
-
     const mapBlocks = []
     for (let i = 0; i < LINES; i++) {
         mapBlocks.push([])
@@ -114,6 +110,37 @@ function initial(columns, lines) {
             let position = { x: i, y: j }
             let dimension = DIMENSION
             let bomb = bombs[i][j]
+            let number = 0
+
+            mapBlocks[i].push(new Block(position, dimension, bomb, number))
+        }
+    }
+
+    map = new Map({ width: CANVAS_DIMENSION.width(), height: CANVAS_DIMENSION.height() }, mapBlocks)
+
+    animate()
+}
+
+function openInitial(xB, yB) {
+    const bombs = []
+
+    for (let i = 0; i < LINES; i++) {
+        bombs.push([])
+        for (let j = 0; j < COLUMNS; j++) bombs[i].push(false)
+    }
+
+    for (let i = 0; i < BOMBS_MAX; i++) {
+        let x, y
+        do {
+            x = Math.round(Math.random() * bombs.length)
+            y = Math.round(Math.random() * bombs[0].length)
+        } while ((x >= xB - 2 && x <= xB + 2 && y >= yB - 2 && y <= yB + 2) || x < 0 || x >= bombs.length || y < 0 || y >= bombs[x].length || bombs[x][y]);
+
+        bombs[x][y] = true
+    }
+
+    for (let i = 0; i < LINES; i++) {
+        for (let j = 0; j < COLUMNS; j++) {
             let number = 0
 
             if (i > 0 && i < LINES - 1) {
@@ -172,13 +199,10 @@ function initial(columns, lines) {
                 }
             }
 
-            mapBlocks[i].push(new Block(position, dimension, bomb, number))
+            map.map[i][j].number = number
         }
     }
 
-    map = new Map({ width: CANVAS_DIMENSION.width(), height: CANVAS_DIMENSION.height() }, mapBlocks)
-
-    animate()
 }
 
 function checkWindowSize_Canvas() {

@@ -11,15 +11,18 @@ export default class Map {
         ctx.fillRect(0, 0, this.dimension.width, this.dimension.height)
 
         let checkEndGame = true
+        let controlEndGame_Click = false
         this.map.forEach((l) => {
             l.forEach((c) => {
                 c.draw(ctx)
                 if (!c.bomb && !c.reveled) {
                     checkEndGame = false
+                } else if (c.bomb) {
+                    controlEndGame_Click = true
                 }
             })
         })
-        if (checkEndGame) {
+        if (checkEndGame && controlEndGame_Click) {
             this.runningGame = false
             this.state = 1
         }
@@ -36,8 +39,10 @@ export default class Map {
         })
     }
 
-    click(x, y, T) {
+    getBlock(x, y) {
+        let i, j
         let blockClicked
+
         for (let i = 0; i < this.map.length; i++) {
             for (let j = 0; j < this.map[i].length; j++) {
                 const block = this.map[i][j]
@@ -54,6 +59,12 @@ export default class Map {
                 }
             }
         }
+
+        return blockClicked
+    }
+
+    click(x, y, T) {
+        let blockClicked = this.map[x][y]
         if (blockClicked != undefined) {
             if (T == 0) this.dig(blockClicked)
             else if (T == 1) this.mark(blockClicked)
