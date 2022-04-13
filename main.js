@@ -43,6 +43,7 @@ function setup() {
         map.click(blockClicked.position.x, blockClicked.position.y, 0)
     })
     canvas.addEventListener("contextmenu", (ev) => {
+        let blockClicked = map.getBlock((ev.clientX) - canvas.offsetLeft, (ev.clientY) - canvas.offsetTop)
         ev.preventDefault()
         map.click(blockClicked.position.x, blockClicked.position.y, 1)
     })
