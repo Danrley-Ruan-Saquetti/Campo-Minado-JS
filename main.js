@@ -4,10 +4,10 @@ import Block from "./src/Class/Block.js"
 const canvas = document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
 
-const COLUMNS = 20
-const LINES = 10
+let COLUMNS = 20
+let LINES = 10
 const DIMENSION = 30
-const BOMBS_MAX = Math.round((COLUMNS * LINES) / 8)
+let BOMBS_MAX = Math.round((COLUMNS * LINES) / 8)
 
 const WINDOW_DIMENSION = {
     height: () => { return window.innerHeight },
@@ -33,20 +33,60 @@ let animateFrame
 
 function setup() {
     checkWindowSize_Canvas()
-    initial()
+
     canvas.addEventListener("click", (ev) => {
-        console.log(ev.clientX, ev.clientY, " - ", canvas.offsetLeft, canvas.offsetTop);
         map.click((ev.clientX) - canvas.offsetLeft, (ev.clientY) - canvas.offsetTop, 0)
     })
     canvas.addEventListener("contextmenu", (ev) => {
         ev.preventDefault()
         map.click((ev.clientX) - canvas.offsetLeft, (ev.clientY) - canvas.offsetTop, 1)
     })
+    document.getElementById("start").addEventListener("click", () => {
+        const difficulty = Number(document.getElementById("difficulty").value)
 
-    window.addEventListener("", () => {})
+        if (difficulty != 0) {
+            let columns, lines
+            switch (difficulty) {
+                case 1:
+                    columns = 12
+                    lines = 10
+                    break;
+                case 2:
+                    columns = 14
+                    lines = 10
+                    break;
+                case 3:
+                    columns = 17
+                    lines = 12
+                    break;
+                case 4:
+                    columns = 20
+                    lines = 14
+                    break;
+            }
+            initial(columns, lines)
+        } else {
+            alert("Por favor, informe a dificuldade da partida")
+        }
+    })
 }
 
-function initial() {
+function menu() {
+    document.getElementById("result").classList.toggle("on")
+    document.getElementById("menu").classList.toggle("on")
+    canvas.classList.toggle("on")
+}
+
+function initial(columns, lines) {
+    COLUMNS = columns
+    LINES = lines
+    BOMBS_MAX = Math.round((COLUMNS * LINES) / 8)
+
+    canvas.width = CANVAS_DIMENSION.width()
+    canvas.height = CANVAS_DIMENSION.height()
+
+    menu()
+
     const bombs = []
 
     for (let i = 0; i < LINES; i++) {
@@ -164,7 +204,15 @@ function animate() {
 function endGame() {
     map.drawEnd(canvas, ctx)
 
-    setTimeout(initial, 5000)
+    const result = document.getElementById("result")
+    if (map.state) {
+        result.innerHTML = "Você perdeu!"
+    } else {
+        result.innerHTML = "Parabéns você ganhou!"
+    }
+    result.classList.toggle("on")
+
+    setTimeout(menu, 3000)
 }
 
 window.onload = setup

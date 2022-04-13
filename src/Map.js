@@ -3,6 +3,7 @@ export default class Map {
         this.dimension = dimension
         this.map = map
         this.runningGame = true
+        this.state = 0
     }
 
     draw(canvas, ctx) {
@@ -20,16 +21,18 @@ export default class Map {
         ctx.fillStyle = "#000"
         ctx.fillRect(0, 0, this.dimension.width, this.dimension.height)
 
+        let checkEndGame = true
         this.map.forEach((l, i) => {
             l.forEach((c, j) => {
                 this.map[i][j].drawEnd(ctx)
+                if (!this.map[i][j].bomb && this.map[i][j].reveled) {
+                    checkEndGame = false
+                }
             })
         })
     }
 
     click(x, y, T) {
-        console.log(x, y);
-        console.log("");
         let blockClicked
         for (let i = 0; i < this.map.length; i++) {
             for (let j = 0; j < this.map[i].length; j++) {
@@ -64,6 +67,7 @@ export default class Map {
                 this.openMap(blockClicked.position.x, blockClicked.position.y)
             } else {
                 this.runningGame = false
+                this.state = 2
             }
         }
     }
