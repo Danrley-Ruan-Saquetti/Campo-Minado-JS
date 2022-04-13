@@ -4,10 +4,10 @@ import Block from "./src/Class/Block.js"
 const canvas = document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
 
-let COLUMNS = 20
-let LINES = 10
+let COLUMNS = 0
+let LINES = 0
 const DIMENSION = 30
-let BOMBS_MAX = Math.round((COLUMNS * LINES) / 8)
+let BOMBS_MAX
 
 const WINDOW_DIMENSION = {
     height: () => { return window.innerHeight },
@@ -48,15 +48,15 @@ function setup() {
             let columns, lines
             switch (difficulty) {
                 case 1:
-                    columns = 12
-                    lines = 10
+                    columns = 10
+                    lines = 8
                     break;
                 case 2:
-                    columns = 14
+                    columns = 13
                     lines = 10
                     break;
                 case 3:
-                    columns = 17
+                    columns = 16
                     lines = 12
                     break;
                 case 4:
@@ -72,15 +72,18 @@ function setup() {
 }
 
 function menu() {
-    document.getElementById("result").classList.toggle("on")
     document.getElementById("menu").classList.toggle("on")
     canvas.classList.toggle("on")
+}
+
+function scoreOn() {
+    document.getElementById("result-score").classList.toggle("on")
 }
 
 function initial(columns, lines) {
     COLUMNS = columns
     LINES = lines
-    BOMBS_MAX = Math.round((COLUMNS * LINES) / 8)
+    BOMBS_MAX = Math.round((COLUMNS * LINES) / 10)
 
     canvas.width = CANVAS_DIMENSION.width()
     canvas.height = CANVAS_DIMENSION.height()
@@ -202,17 +205,24 @@ function animate() {
 }
 
 function endGame() {
-    map.drawEnd(canvas, ctx)
+    if (map.state == 2) map.drawEnd(canvas, ctx)
 
     const result = document.getElementById("result")
+    let text = ""
     if (map.state) {
-        result.innerHTML = "Você perdeu!"
+        text = "Você perdeu!"
     } else {
-        result.innerHTML = "Parabéns você ganhou!"
+        text = "Parabéns você ganhou!"
     }
-    result.classList.toggle("on")
 
-    setTimeout(menu, 3000)
+    result.innerHTML = text
+
+    scoreOn()
+
+    setTimeout(() => {
+        scoreOn()
+        menu()
+    }, 3000)
 }
 
 window.onload = setup

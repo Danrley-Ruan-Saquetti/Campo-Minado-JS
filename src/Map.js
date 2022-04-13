@@ -10,24 +10,28 @@ export default class Map {
         ctx.fillStyle = "#000"
         ctx.fillRect(0, 0, this.dimension.width, this.dimension.height)
 
-        this.map.forEach((l, i) => {
-            l.forEach((c, j) => {
-                this.map[i][j].draw(ctx)
+        let checkEndGame = true
+        this.map.forEach((l) => {
+            l.forEach((c) => {
+                c.draw(ctx)
+                if (!c.bomb && !c.reveled) {
+                    checkEndGame = false
+                }
             })
         })
+        if (checkEndGame) {
+            this.runningGame = false
+            this.state = 1
+        }
     }
 
     drawEnd(canvas, ctx) {
         ctx.fillStyle = "#000"
         ctx.fillRect(0, 0, this.dimension.width, this.dimension.height)
 
-        let checkEndGame = true
-        this.map.forEach((l, i) => {
-            l.forEach((c, j) => {
-                this.map[i][j].drawEnd(ctx)
-                if (!this.map[i][j].bomb && this.map[i][j].reveled) {
-                    checkEndGame = false
-                }
+        this.map.forEach((l) => {
+            l.forEach((c) => {
+                c.drawEnd(ctx)
             })
         })
     }
