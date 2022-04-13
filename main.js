@@ -9,6 +9,11 @@ const LINES = 10
 const DIMENSION = 30
 const BOMBS_MAX = Math.round((COLUMNS * LINES) / 8)
 
+const WINDOW_DIMENSION = {
+    height: () => { return window.innerHeight },
+    width: () => { return window.innerWidth }
+}
+
 const CANVAS_DIMENSION = {
     width: () => {
         return DIMENSION * COLUMNS
@@ -21,13 +26,24 @@ const CANVAS_DIMENSION = {
 canvas.width = CANVAS_DIMENSION.width()
 canvas.height = CANVAS_DIMENSION.height()
 
+resizeCanvas()
+
 let map
 let animateFrame
 
 function setup() {
+    checkWindowSize_Canvas()
     initial()
-    window.addEventListener("click", (ev) => map.click(ev.clientX, ev.clientY, 0))
-    window.addEventListener("contextmenu", (ev) => map.click(ev.clientX, ev.clientY, 1))
+    canvas.addEventListener("click", (ev) => {
+        console.log(ev.clientX, ev.clientY, " - ", canvas.offsetLeft, canvas.offsetTop);
+        map.click((ev.clientX) - canvas.offsetLeft, (ev.clientY) - canvas.offsetTop, 0)
+    })
+    canvas.addEventListener("contextmenu", (ev) => {
+        ev.preventDefault()
+        map.click((ev.clientX) - canvas.offsetLeft, (ev.clientY) - canvas.offsetTop, 1)
+    })
+
+    window.addEventListener("", () => {})
 }
 
 function initial() {
@@ -120,6 +136,20 @@ function initial() {
     map = new Map({ width: CANVAS_DIMENSION.width(), height: CANVAS_DIMENSION.height() }, mapBlocks)
 
     animate()
+}
+
+function checkWindowSize_Canvas() {
+    if (canvas.clientLeft != (WINDOW_DIMENSION.width() / canvas.clientWidth) / 2 ||
+        canvas.clientTop != (WINDOW_DIMENSION.height() / canvas.clientHeight) / 2) {
+        resizeCanvas()
+    }
+
+    requestAnimationFrame(checkWindowSize_Canvas)
+}
+
+function resizeCanvas() {
+    canvas.style.top = ((WINDOW_DIMENSION.height() - canvas.clientHeight) / 2) + "px"
+    canvas.style.left = ((WINDOW_DIMENSION.width() - canvas.clientWidth) / 2) + "px"
 }
 
 function animate() {

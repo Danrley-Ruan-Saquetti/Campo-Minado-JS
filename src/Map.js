@@ -28,6 +28,8 @@ export default class Map {
     }
 
     click(x, y, T) {
+        console.log(x, y);
+        console.log("");
         let blockClicked
         for (let i = 0; i < this.map.length; i++) {
             for (let j = 0; j < this.map[i].length; j++) {
@@ -69,7 +71,6 @@ export default class Map {
     openMap(i, j) {
         let map = this.map
 
-        console.log(map[i][j]);
         if (map[i][j].number == 0) {
             if (i > 0 && i < map.length - 1) {
                 if (!map[i - 1][j].reveled && !map[i - 1][j].bomb) {
