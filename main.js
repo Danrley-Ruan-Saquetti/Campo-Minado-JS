@@ -89,7 +89,7 @@ function initial(columns, lines) {
     clickInitial = true
     COLUMNS = columns
     LINES = lines
-    BOMBS_MAX = Math.round((COLUMNS * LINES) / 8)
+    BOMBS_MAX = Math.round((COLUMNS * LINES) / 5)
 
     canvas.width = CANVAS_DIMENSION.width()
     canvas.height = CANVAS_DIMENSION.height()
